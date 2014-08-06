@@ -1,0 +1,33 @@
+apply plugin: 'java'
+
+println name
+println project.name
+sourceCompatibility = 1.5
+version = '1.0'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+    } 
+}
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+dependencies {
+    compile 'org.hibernate:hibernate:3.2.6.ga'
+    compile 'org.jboss.spec.javax.jms:jboss-jms-api_1.1_spec:1.0.1.Final'
+    compile 'org.springframework:spring-jms:4.0.2.RELEASE'
+    compile 'com.ning:async-http-client:1.8.3'
+    compile 'org.apache.httpcomponents:httpasyncclient:4.0.1'
+    compile 'com.lmax:disruptor:3.2.0'
+    compile 'org.apache.activemq:activemq-client:5.8.0'
+    compile 'commons-httpclient:commons-httpclient:3.1'
+    compile 'org.apache.httpcomponents:httpasyncclient:4.0.1'
+    testCompile 'junit:junit:4.8.2'
+    compile 'ch.qos.logback:logback-classic:1.0.9'
+}

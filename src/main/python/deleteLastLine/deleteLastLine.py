@@ -20,12 +20,12 @@ with open(file,'r+b') as f:
     while f.tell() > 0:
         f.seek(-1, os.SEEK_CUR)
         char = f.read(1)
-        if char != '\n' and f.tell() == end:
-            print "No change: file does not end with a newline"
-            exit(1)
+        # if char != '\n' and f.tell() == end:
+        #     print "No change: file does not end with a newline"
+        #     exit(1)
         if char == '\n':
             count += 1
-        if count == number + 1:
+        if count == number:
             f.truncate()
             print "Removed " + str(number) + " lines from end of file"
             exit(0)

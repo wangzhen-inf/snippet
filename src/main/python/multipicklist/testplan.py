@@ -29,7 +29,7 @@ Options
 
 
 def main(argv):
-    input = "option.set"
+    input_file = "option.set"
     tenant = 2034
     output = ""
     number = 1000
@@ -44,7 +44,7 @@ def main(argv):
         elif opt in ("-n", "--number"):
             number = arg
         elif opt in ("-o", "--input"):
-            input = arg
+            input_file = arg
         elif opt in ("-t", "--tenant"):
             tenant = arg
         elif opt in ("-h", "--help"):
@@ -54,12 +54,11 @@ def main(argv):
             usage()
             exit(1)
 
-    f = open(input)
+    f = open(input_file)
     o = open(output, "w")
 
     lines = f.readlines()
     option_set = ';'.join(lines).replace('\n', '').split(';')
-    buffer = 1000
     i = 0
     while i < number:
         i += 1

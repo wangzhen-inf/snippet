@@ -2,10 +2,16 @@ import random
 import sys
 import getopt
 import uuid
+import logging
 
 sql_prefix = "insert poc_multi_picklist (tenant_id, oid, cf_data) values "
 
 sql_template = " ('{tenant_id}', '{oid}', '{cf_data}') "
+
+POISON = "POISON-" + uuid.uuid4().hex
+
+logging.basicConfig(level=logging.INFO)
+logger_main = logging.getLogger('Main')
 
 
 def generate_one_row(option_set, tenant_id):
@@ -17,60 +23,69 @@ def generate_one_row(option_set, tenant_id):
 
 def do_insertion(queue):
     import MySQLdb
-
+    import config
     # Open database connection
-    db = MySQLdb.connect(host="localhost", port=63306, user="zuora", passwd="123456", db="test")
+    db = MySQLdb.connect(host=config.DB_HOST, port=config.DB_PORT, user=config.DB_USER, passwd=config.DB_PASS, db=config.DB_DATABASE)
 
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
 
+    logger_db = logging.getLogger('DB')
     while True:
         # Prepare SQL query to INSERT a record into the database.
         sql_segment = queue.get()
-        if sql_segment == 'Poison':
+        if sql_segment == POISON:
             break
         try:
             # Execute the SQL command
-            sql = sql_prefix + sql_segment + ";"
+            sql = sql_prefix + sql_segment
+            logger_db.debug(sql)
             cursor.execute(sql)
             # Commit your changes in the database
             db.commit()
-        except:
+        except Exception as e:
+            logger_db.error(e)
             # Rollback in case there is any error
             db.rollback()
 
     # disconnect from server
     db.close()
 
+input_file = "option.set"
+tenant = 2034
+number = 1000
+
 
 def usage():
     print """
 
 Usage: python {file_name} [OPTIONS] \n
-
+Default: python {file_name} -i {input_file} -t {tenant} -n {number}
 Options
-    -o output -i input -n number -t tenant
-    -o, --output=               Output file name, Required.
+    -i input -n number -t tenant
     -i, --input=option.set      File name of option set
     -t, --tenant=2034           Tenant id of test data
     -n, --number=0              The size of test data
 
-    """.format(file_name=sys.argv[0])
+    """.format(file_name=sys.argv[0], input_file=input_file, tenant=tenant, number=number)
 
 
 def main(argv):
-    input_file = "option.set"
-    tenant = 2034
-    number = 1000
+    global input_file
+    global tenant
+    global number
+
     try:
-        opts, args = getopt.getopt(argv, "hn:o:i:t:", ["help", "number=", "output=", "input=", "tenant="])
+        opts, args = getopt.getopt(argv, "hn:i:t:", ["help", "number=", "input=", "tenant="])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
+
+    if len(opts) == 0:
+        print "Will use default parameter: python {file_name} -i {input_file} -t {tenant} -n {number}".format(
+            file_name=sys.argv[0], input_file=input_file, tenant=tenant, number=number)
     for opt, arg in opts:
-        if opt in ("-o", "--output"):
-            output = arg
-        elif opt in ("-n", "--number"):
+        if opt in ("-n", "--number"):
             number = arg
         elif opt in ("-o", "--input"):
             input_file = arg
@@ -103,11 +118,17 @@ def main(argv):
     while i < number:
         i += 1
         one_row = generate_one_row(option_set, tenant)
-        sql_segment_buffer += one_row
+
         if i % 1000 == 0:
+            sql_segment_buffer += one_row + ';'
             sql_queue.put_nowait(sql_segment_buffer)
             sql_segment_buffer = ''
+        else:
+            sql_segment_buffer += one_row + ','
 
+    logger_main.info("Finish SQL generation")
+    sql_queue.put_nowait(POISON)
+    db_thread.join()
 
 if __name__ == "__main__":
     main(sys.argv[1:])

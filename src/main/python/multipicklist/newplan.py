@@ -100,11 +100,11 @@ def main(argv):
         sys.exit(2)
 
     if len(opts) == 0:
-        print "Will use default parameter: python {file_name} -i {input_file} -t {tenant} -n {number}".format(
-            file_name=sys.argv[0], input_file=input_file, tenant=tenant, number=number)
+        logger_main.info("Will use default parameter: python {file_name} -i {input_file} -t {tenant} -n {number}".format(
+            file_name=sys.argv[0], input_file=input_file, tenant=tenant, number=number))
     for opt, arg in opts:
         if opt in ("-n", "--number"):
-            number = arg
+            number = int(arg)
         elif opt in ("-o", "--input"):
             input_file = arg
         elif opt in ("-t", "--tenant"):

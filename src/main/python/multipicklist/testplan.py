@@ -42,7 +42,7 @@ def main(argv):
         if opt in ("-o", "--output"):
             output = arg
         elif opt in ("-n", "--number"):
-            number = arg
+            number = int(arg)
         elif opt in ("-o", "--input"):
             input_file = arg
         elif opt in ("-t", "--tenant"):

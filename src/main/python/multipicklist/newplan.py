@@ -4,7 +4,25 @@ import getopt
 import uuid
 import logging
 
-sql_prefix = "insert poc_multi_picklist (tenant_id, oid, cf_data) values "
+"""
+
+-- Table structure for table `poc_multi_picklist`
+--
+
+DROP TABLE IF EXISTS `poc_multi_picklist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `poc_multi_picklist` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` varchar(32) DEFAULT NULL,
+  `oid` varchar(32) DEFAULT NULL,
+  `cf_data` varchar(1024) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */; varchar(32),  cf_data varchar(1024) );
+
+"""
+sql_prefix = "insert poc_multi_picklist (tenant_id, oid,  cf_data) values "
 
 sql_template = " ('{tenant_id}', '{oid}', '{cf_data}') "
 

@@ -34,7 +34,7 @@ logger_main = logging.getLogger('Main')
 
 def generate_one_row(option_set, tenant_id):
     option_value_arr = random.sample(option_set, random.randint(1, 10))
-    option_value = ";".join(option_value_arr)
+    option_value = ";".join(option_value_arr.sort())
     oid = uuid.uuid4().hex
     return sql_template.format(tenant_id=tenant_id, oid=oid, cf_data=option_value)
 

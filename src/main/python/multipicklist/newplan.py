@@ -123,6 +123,7 @@ def main(argv):
             sql_segment_buffer += one_row + ';'
             sql_queue.put_nowait(sql_segment_buffer)
             sql_segment_buffer = ''
+            logger_main.info("Generate the {index}th insert SQL".format(index=i))
         else:
             sql_segment_buffer += one_row + ','
 

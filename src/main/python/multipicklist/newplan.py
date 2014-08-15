@@ -28,7 +28,7 @@ sql_template = " ('{tenant_id}', '{oid}', '{cf_data}') "
 
 POISON = "POISON-" + uuid.uuid4().hex
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(filename='multi-picklist.log',level=logging.INFO)
 logger_main = logging.getLogger('Main')
 
 

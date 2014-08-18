@@ -5,6 +5,8 @@ import uuid
 import logging
 
 """
+Generate test data for the approach one of the POC of custom field.
+The script will generate test data for ACS-111	POC: Add Custom Field of type "Multi-select picklist"
 
 -- Table structure for table `poc_multi_picklist`
 --

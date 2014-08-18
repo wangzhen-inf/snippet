@@ -108,7 +108,7 @@ def main(argv):
     for opt, arg in opts:
         if opt in ("-n", "--number"):
             number = int(arg)
-        elif opt in ("-o", "--input"):
+        elif opt in ("-i", "--input"):
             input_file = arg
         elif opt in ("-t", "--tenant"):
             tenant = arg

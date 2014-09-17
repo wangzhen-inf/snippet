@@ -11,6 +11,7 @@ cur = db.cursor()
 cur4table = db.cursor()
 
 resultFile = open("audit.csv", "w")
+resultFile.write("Table, Number of Audit Info, Audit Info\r\n")
 databases = ("main", "main_global")
 
 def hasAudit(table):
@@ -20,10 +21,6 @@ def hasAudit(table):
     return (table, len(auditInfo), auditInfo)
 
 
-def output(info):
-    resultFile.write(str(info) + '\r\n')
-
-
 def ignore_cf(table):
     return table.endswith("_cf")
 
@@ -31,7 +28,8 @@ def ignore_known(table):
     return table in ["zg_fx_cursor", "zg_fx_currency_rate", "zg_fx_failed_job"]
 
 def ignore(table):
-    rules = [ignore_cf, ignore_known]
+    # rules = [ignore_cf, ignore_known]
+    rules = []
     def applyRule(r):
         return r(table)
     return any(map(applyRule, rules))
@@ -44,5 +42,7 @@ def checkDB(database):
     map(output, auditStatistic)
     return auditStatistic
 
+def output(info):
+    resultFile.write(",".join(map(str, info)) + '\r\n')
 
 map(checkDB, databases)

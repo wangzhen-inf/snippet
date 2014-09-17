@@ -20,7 +20,7 @@ sql_template = " ('{tenant_id}', '{oid}', '{cf_data}') "
 
 POISON = "POISON-" + uuid.uuid4().hex
 
-logging.basicConfig(filename=sys.argv[0].replace("py", 'log'), level=logging.DEBUG)
+logging.basicConfig(filename=sys.argv[0].replace("py", 'log'), level=logging.INFO)
 logger_main = logging.getLogger('Main')
 
 
